@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LinkedIn Job Postings 2023–24 — Dashboard</title>
+  <meta name="description" content="Interactive analysis of 123,849 LinkedIn job postings: salary, geography, engagement, and data-quality findings." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="container row">
+      <div>
+        <h1>LinkedIn Job Postings 2023–24</h1>
+        <p>123,849 postings · salary, geography &amp; engagement analysis</p>
+      </div>
+      <div style="display:flex; align-items:center; gap:10px;">
+        <span class="badge" id="dataset-badge">Kaggle: arshkon/linkedin-job-postings</span>
+        <button class="theme-toggle" id="theme-toggle" type="button">Light mode</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <section id="kpi-section">
+      <h2>Overview</h2>
+      <div class="kpi-grid" id="kpi-grid"></div>
+    </section>
+
+    <section id="dq-section">
+      <h2>Data quality findings
+        <span class="sub">Bugs found in the original analysis — fixed in the notebook, called out here for transparency</span>
+      </h2>
+      <div class="dq-panel" id="dq-panel"></div>
+    </section>
+
+    <section id="charts-section">
+      <h2>Postings by state
+        <span class="sub">Filter states, or narrow to the top N by posting volume</span>
+      </h2>
+      <div class="filters-row">
+        <div class="filter-group">
+          <label for="state-search">Search state</label>
+          <input type="search" id="state-search" placeholder="e.g. CA, TX…" />
+        </div>
+        <div class="filter-group">
+          <label for="topn-slider">Top N: <span id="topn-value">15</span></label>
+          <input type="range" id="topn-slider" min="5" max="51" value="15" />
+        </div>
+        <div class="filter-group">
+          <span id="state-filter-summary"></span>
+        </div>
+      </div>
+      <div class="charts-grid">
+        <div class="chart-card">
+          <h3>Job postings by state</h3>
+          <div class="chart-note">Horizontal bars, sorted by volume — hover for exact counts</div>
+          <svg id="state-chart" width="100%" height="480"></svg>
+        </div>
+        <div class="chart-card">
+          <h3>Annual salary distribution</h3>
+          <div class="chart-note">Robust percentiles (n=36,073) — mean/max excluded, see data-quality findings</div>
+          <svg id="salary-chart" width="100%" height="220"></svg>
+          <h3 style="margin-top:18px;">Description length</h3>
+          <div class="chart-note">Word count percentiles across all postings</div>
+          <svg id="desc-chart" width="100%" height="180"></svg>
+        </div>
+      </div>
+    </section>
+
+    <section id="keywords-section">
+      <h2>Top keywords
+        <span class="sub">Extracted from posting text, common stopwords filtered</span>
+      </h2>
+      <div class="filters-row">
+        <div class="toggle-group" id="keyword-toggle">
+          <button data-src="description" class="active" type="button">Job descriptions</button>
+          <button data-src="skills" type="button">Skills requirements</button>
+        </div>
+      </div>
+      <div class="chart-card">
+        <svg id="keyword-chart" width="100%" height="320"></svg>
+      </div>
+    </section>
+
+    <section id="segmentation-section">
+      <h2>Job market segments
+        <span class="sub">K-means on salary, views &amp; remote status (k=2)</span>
+      </h2>
+      <div class="segment-grid" id="segment-grid"></div>
+    </section>
+
+    <section id="model-section">
+      <h2>Salary prediction model
+        <span class="sub">Linear regression — views, posting age &amp; remote status as features</span>
+      </h2>
+      <div class="two-col">
+        <div class="list-card">
+          <h3>Result</h3>
+          <ul id="model-result-list"></ul>
+        </div>
+        <div class="list-card">
+          <h3>Feature importance (coefficients)</h3>
+          <svg id="model-chart" width="100%" height="150"></svg>
+        </div>
+      </div>
+    </section>
+
+    <section id="insights-section">
+      <div class="two-col">
+        <div class="list-card">
+          <h3>Insights</h3>
+          <ul id="insights-list"></ul>
+        </div>
+        <div class="list-card">
+          <h3>Recommendations</h3>
+          <ul id="recommendations-list"></ul>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <p>Data source: <a href="https://www.kaggle.com/datasets/arshkon/linkedin-job-postings" target="_blank" rel="noopener">arshkon/linkedin-job-postings</a> on Kaggle (CC-BY-SA-4.0), 123,849 postings. Figures on this dashboard come from the aggregate outputs already computed in <code>New_linkedin.ipynb</code>; the notebook's salary-normalization and text-analysis bugs were fixed in place (see Data quality findings above and the notebook diff) so a future re-run against the live dataset produces corrected mean/state-level figures. See the project <a href="../README.md">README</a> for the full write-up.</p>
+    </footer>
+  </div>
+
+  <div class="tooltip" id="tooltip"></div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

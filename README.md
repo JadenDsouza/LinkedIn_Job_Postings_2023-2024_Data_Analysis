@@ -129,3 +129,30 @@ Visualizations
 ![Image](https://github.com/user-attachments/assets/4f109ca9-f2df-4054-8985-7ebbaf0d2524)
 ![Image](https://github.com/user-attachments/assets/394ba590-6226-4824-88bd-9ff88e591122)
 ![Image](https://github.com/user-attachments/assets/b589ff46-7b10-41aa-a938-9f1cc4b9a144)
+
+## Interactive Dashboard
+
+A static, dependency-free dashboard built on the analysis above lives in
+[`dashboard/`](dashboard/) — dark theme by default, with slicers (state
+search, top-N, keyword source toggle), hover tooltips on every chart, and a
+dedicated "Data quality findings" panel documenting bugs found and fixed in
+`New_linkedin.ipynb` (see [`dashboard/README.md`](dashboard/README.md) for
+details and Vercel deploy instructions).
+
+Run it locally:
+
+```bash
+cd dashboard && python3 -m http.server 8000
+```
+
+Deploy to Vercel: import this repo and set **Root Directory** to `dashboard`
+(no build command needed), or run `npx vercel --cwd dashboard`.
+
+## Notebook fixes
+
+While building the dashboard, several bugs were found in `New_linkedin.ipynb`
+and fixed in place — most notably a salary-normalization bug that only
+annualized `HOURLY` pay and let `WEEKLY`/`BIWEEKLY`/`MONTHLY` values pass
+through unconverted (producing outliers like a $572,000,000 "annual salary"
+and corrupting every downstream mean, "top job" ranking, and model). Full
+list in [`dashboard/README.md`](dashboard/README.md#bugs-found-and-fixed).
